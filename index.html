@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>国际/国内快递评估工具 - 智能比价选择性价比最高的快递</title>
+    
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="免费的国际和国内快递评估工具，支持DHL、FedEx、顺丰等13家快递公司价格和时效对比，智能推荐性价比最高的快递服务。">
+    <meta name="keywords" content="快递评估,快递价格,国际快递,国内快递,DHL,FedEx,顺丰,中通,快递比价,快递查询">
+    <meta name="author" content="Express Estimator">
+    
+    <!-- Open Graph / Social Media -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="国际/国内快递评估工具">
+    <meta property="og:description" content="智能比价，推荐性价比最高的快递公司">
+    <meta property="og:image" content="https://你的域名/preview.png">
+    
+    <!-- Favicon -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📦</text></svg>">
+    
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header class="app-header">
+            <h1>🚀 国际/国内快递评估工具</h1>
+            <p>输入寄件地和收件地，智能评估快递时间和费用</p>
+        </header>
+
+        <main class="app-main">
+            <!-- 表单区域 -->
+            <div class="form-container">
+                <form id="expressForm">
+                    <!-- 寄件信息 -->
+                    <div class="form-section">
+                        <h2>📦 寄件信息</h2>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="fromCountry">寄件国家</label>
+                                <select id="fromCountry" name="fromCountry" required>
+                                    <option value="CN">中国</option>
+                                    <option value="US">美国</option>
+                                    <option value="UK">英国</option>
+                                    <option value="JP">日本</option>
+                                    <option value="AU">澳大利亚</option>
+                                    <option value="CA">加拿大</option>
+                                    <option value="DE">德国</option>
+                                    <option value="FR">法国</option>
+                                    <option value="SG">新加坡</option>
+                                    <option value="KR">韩国</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="fromCity">寄件城市</label>
+                                <select id="fromCity" name="fromCity" required>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 收件信息 -->
+                    <div class="form-section">
+                        <h2>📍 收件信息</h2>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="toCountry">收件国家</label>
+                                <select id="toCountry" name="toCountry" required>
+                                    <option value="CN">中国</option>
+                                    <option value="US" selected>美国</option>
+                                    <option value="UK">英国</option>
+                                    <option value="JP">日本</option>
+                                    <option value="AU">澳大利亚</option>
+                                    <option value="CA">加拿大</option>
+                                    <option value="DE">德国</option>
+                                    <option value="FR">法国</option>
+                                    <option value="SG">新加坡</option>
+                                    <option value="KR">韩国</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="toCity">收件城市</label>
+                                <select id="toCity" name="toCity" required>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 包裹信息 -->
+                    <div class="form-section">
+                        <h2>⚖️ 包裹信息</h2>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="weight">重量（公斤）</label>
+                                <input type="number" id="weight" name="weight" min="0.1" max="100" step="0.1" value="1" required>
+                            </div>
+                            <div class="form-group checkbox-group">
+                                <label>
+                                    <input type="checkbox" id="urgent" name="urgent">
+                                    <span>加急服务</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="submit-btn">🔍 开始评估</button>
+                </form>
+            </div>
+
+            <!-- 结果区域 -->
+            <div id="resultsContainer" class="results-container" style="display: none;">
+                <!-- 结果内容将通过 JavaScript 动态生成 -->
+            </div>
+        </main>
+
+        <footer class="app-footer">
+            <p>💡 提示：本工具提供的价格和时效仅供参考，实际费用以快递公司报价为准</p>
+        </footer>
+    </div>
+
+    <script src="data.js"></script>
+    <script src="calculator.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
