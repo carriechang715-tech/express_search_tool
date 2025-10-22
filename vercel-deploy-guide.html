@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vercel 部署指南 - 快递评估工具</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            line-height: 1.8;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        h1 {
+            color: #2d3748;
+            margin-bottom: 10px;
+            font-size: 2.2rem;
+        }
+        .subtitle {
+            color: #718096;
+            margin-bottom: 30px;
+            font-size: 1.1rem;
+        }
+        .step {
+            background: #f7fafc;
+            border-left: 4px solid #667eea;
+            padding: 20px;
+            margin-bottom: 25px;
+            border-radius: 8px;
+        }
+        .step-number {
+            display: inline-block;
+            width: 35px;
+            height: 35px;
+            background: #667eea;
+            color: white;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 35px;
+            font-weight: bold;
+            margin-right: 15px;
+        }
+        .step h2 {
+            display: inline-block;
+            color: #2d3748;
+            font-size: 1.3rem;
+            vertical-align: middle;
+        }
+        .step-content {
+            margin-top: 15px;
+            margin-left: 50px;
+            color: #4a5568;
+        }
+        .btn {
+            display: inline-block;
+            padding: 12px 30px;
+            background: #667eea;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            margin-top: 10px;
+            transition: all 0.3s;
+        }
+        .btn:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+        .btn-secondary {
+            background: #48bb78;
+        }
+        .btn-secondary:hover {
+            background: #38a169;
+        }
+        .code-box {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            margin: 15px 0;
+            overflow-x: auto;
+        }
+        .highlight {
+            background: #fef3c7;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+        .success-box {
+            background: #d1fae5;
+            border: 2px solid #34d399;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 30px;
+        }
+        .success-box h3 {
+            color: #065f46;
+            margin-bottom: 10px;
+        }
+        .warning-box {
+            background: #fef3c7;
+            border: 2px solid #fbbf24;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+        .checklist {
+            list-style: none;
+            margin: 15px 0;
+        }
+        .checklist li {
+            padding: 8px 0;
+            padding-left: 30px;
+            position: relative;
+        }
+        .checklist li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #48bb78;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+        .timeline {
+            margin: 20px 0;
+            padding-left: 20px;
+            border-left: 3px solid #e2e8f0;
+        }
+        .timeline-item {
+            position: relative;
+            padding-bottom: 20px;
+            padding-left: 30px;
+        }
+        .timeline-item:before {
+            content: "";
+            position: absolute;
+            left: -26px;
+            top: 5px;
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+            background: #667eea;
+            border: 3px solid white;
+            box-shadow: 0 0 0 3px #e2e8f0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚀 Vercel 部署指南</h1>
+        <p class="subtitle">5分钟让您的 API 上线，全球访问！</p>
+
+        <div class="warning-box">
+            <strong>⚠️ 重要提示：</strong> GitHub Pages 不支持服务端 API，因此我们需要使用 Vercel 部署 API 功能。
+        </div>
+
+        <!-- 步骤 1 -->
+        <div class="step">
+            <span class="step-number">1</span>
+            <h2>访问 Vercel 并登录</h2>
+            <div class="step-content">
+                <p>点击下面的按钮访问 Vercel：</p>
+                <a href="https://vercel.com" target="_blank" class="btn">访问 Vercel</a>
+                <p style="margin-top: 15px;">在 Vercel 首页，点击 <span class="highlight">Sign Up</span>（注册）或 <span class="highlight">Login</span>（登录）</p>
+                <p>选择 <span class="highlight">Continue with GitHub</span> 使用 GitHub 账号登录（推荐）</p>
+            </div>
+        </div>
+
+        <!-- 步骤 2 -->
+        <div class="step">
+            <span class="step-number">2</span>
+            <h2>导入 GitHub 项目</h2>
+            <div class="step-content">
+                <p>登录后，点击右上角的 <span class="highlight">Add New...</span> → <span class="highlight">Project</span></p>
+                <p>或者直接访问：</p>
+                <a href="https://vercel.com/new" target="_blank" class="btn">创建新项目</a>
+                
+                <div class="timeline" style="margin-top: 20px;">
+                    <div class="timeline-item">
+                        <strong>选择 Import Git Repository</strong>
+                    </div>
+                    <div class="timeline-item">
+                        <strong>授权 Vercel 访问您的 GitHub</strong>（如果是首次使用）
+                    </div>
+                    <div class="timeline-item">
+                        <strong>在仓库列表中找到</strong> <code>express_search_tool</code>
+                    </div>
+                    <div class="timeline-item">
+                        <strong>点击 Import</strong>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 步骤 3 -->
+        <div class="step">
+            <span class="step-number">3</span>
+            <h2>配置项目</h2>
+            <div class="step-content">
+                <p>在配置页面，按以下设置：</p>
+                <ul class="checklist">
+                    <li><strong>Project Name</strong>: 保持默认或自定义（如：express-api）</li>
+                    <li><strong>Framework Preset</strong>: 选择 <span class="highlight">Other</span></li>
+                    <li><strong>Root Directory</strong>: 保持默认 <code>./</code></li>
+                    <li><strong>Build Command</strong>: 留空</li>
+                    <li><strong>Output Directory</strong>: 留空</li>
+                </ul>
+                <div class="warning-box" style="margin-top: 15px;">
+                    <strong>💡 提示：</strong> 因为我们是纯静态站点 + Serverless API，不需要构建步骤。
+                </div>
+            </div>
+        </div>
+
+        <!-- 步骤 4 -->
+        <div class="step">
+            <span class="step-number">4</span>
+            <h2>开始部署</h2>
+            <div class="step-content">
+                <p>确认配置无误后，点击 <span class="highlight">Deploy</span> 按钮</p>
+                <p>⏱️ 部署时间：约 30-60 秒</p>
+                <p style="margin-top: 10px;">您会看到一个进度动画，等待部署完成...</p>
+            </div>
+        </div>
+
+        <!-- 步骤 5 -->
+        <div class="step">
+            <span class="step-number">5</span>
+            <h2>获取 API 地址</h2>
+            <div class="step-content">
+                <p>部署成功后，您会看到 <strong style="color: #48bb78;">🎉 Congratulations!</strong></p>
+                <p>Vercel 会分配一个域名，格式类似：</p>
+                <div class="code-box">
+https://express-search-tool-xxx.vercel.app
+                </div>
+                <p>您的 API 地址就是：</p>
+                <div class="code-box">
+https://你的域名.vercel.app/api/calculate
+                </div>
+            </div>
+        </div>
+
+        <!-- 步骤 6 -->
+        <div class="step">
+            <span class="step-number">6</span>
+            <h2>测试 API</h2>
+            <div class="step-content">
+                <p>复制下面的命令，替换域名后在终端运行：</p>
+                <div class="code-box">
+curl "https://你的域名.vercel.app/api/calculate?from=CN&to=US&weight=2"
+                </div>
+                <p style="margin-top: 15px;">或者在浏览器访问您的 API 测试页面：</p>
+                <div class="code-box">
+https://你的域名.vercel.app/api-test.html
+                </div>
+                <p style="margin-top: 15px;">如果返回 JSON 数据，说明部署成功！🎉</p>
+            </div>
+        </div>
+
+        <!-- 成功提示 -->
+        <div class="success-box">
+            <h3>✅ 部署成功后，您将拥有：</h3>
+            <ul class="checklist">
+                <li><strong>网页版工具</strong>：https://你的域名.vercel.app/</li>
+                <li><strong>API 接口</strong>：https://你的域名.vercel.app/api/calculate</li>
+                <li><strong>API 测试页</strong>：https://你的域名.vercel.app/api-test.html</li>
+                <li><strong>自动 HTTPS</strong>：所有请求都是安全的</li>
+                <li><strong>全球 CDN</strong>：访问速度快</li>
+                <li><strong>自动部署</strong>：每次 git push 自动更新</li>
+            </ul>
+        </div>
+
+        <div style="margin-top: 30px; padding: 20px; background: #edf2f7; border-radius: 8px;">
+            <h3 style="color: #2d3748; margin-bottom: 10px;">📚 相关文档</h3>
+            <p>部署完成后，建议阅读：</p>
+            <ul style="margin-left: 20px; margin-top: 10px;">
+                <li><strong>API.md</strong> - 完整 API 文档</li>
+                <li><strong>API使用指南.md</strong> - 详细使用教程</li>
+                <li><strong>README.md</strong> - 项目说明</li>
+            </ul>
+        </div>
+
+        <div style="margin-top: 30px; padding: 20px; background: #fff5f5; border: 2px solid #fc8181; border-radius: 8px;">
+            <h3 style="color: #c53030; margin-bottom: 10px;">🆘 遇到问题？</h3>
+            <p><strong>Q: 部署失败怎么办？</strong></p>
+            <p>A: 检查 vercel.json 文件是否存在，或查看 Vercel 部署日志</p>
+            <p style="margin-top: 10px;"><strong>Q: API 返回 404？</strong></p>
+            <p>A: 确保访问路径是 /api/calculate（有 /api/ 前缀）</p>
+            <p style="margin-top: 10px;"><strong>Q: 如何自动部署？</strong></p>
+            <p>A: Vercel 已自动配置，每次 git push 到 main 分支都会自动部署</p>
+        </div>
+
+        <div style="text-align: center; margin-top: 40px; padding: 30px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 12px; color: white;">
+            <h2 style="margin-bottom: 15px;">🎯 现在就开始部署！</h2>
+            <p style="margin-bottom: 20px; font-size: 1.1rem;">只需 5 分钟，让您的 API 服务全球可用</p>
+            <a href="https://vercel.com/new" target="_blank" class="btn btn-secondary" style="background: white; color: #667eea;">
+                🚀 开始部署
+            </a>
+        </div>
+    </div>
+</body>
+</html>
