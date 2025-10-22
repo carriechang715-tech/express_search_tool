@@ -13,11 +13,29 @@ function calculateCostPerformance(price, days, rating) {
 }
 
 // 计算单个快递选项
-function calculateOption(company, weight, urgent) {
+function calculateOption(company, weight, urgent, parcelType, serviceType) {
     let price = company.basePrice + (weight - 1) * company.pricePerKg;
     let days = company.baseDays;
     
-    if (urgent) {
+    // 应用寄件类型系数
+    if (parcelType && company.parcelTypes) {
+        const selectedParcelType = company.parcelTypes.find(pt => pt.id === parcelType);
+        if (selectedParcelType) {
+            price = price * selectedParcelType.priceMultiplier;
+        }
+    }
+    
+    // 应用服务类型系数
+    if (serviceType && company.serviceTypes) {
+        const selectedServiceType = company.serviceTypes.find(st => st.id === serviceType);
+        if (selectedServiceType) {
+            price = price * selectedServiceType.priceMultiplier;
+            days = days * selectedServiceType.daysMultiplier;
+        }
+    }
+    
+    // 兼容旧的urgent参数（如果没有选择serviceType）
+    if (urgent && !serviceType) {
         price = price * company.urgentMultiplier;
         days = company.urgentDays;
     }
@@ -40,20 +58,22 @@ function calculateOption(company, weight, urgent) {
         rating: company.rating,
         features: company.features,
         website: company.website,
+        parcelType: parcelType,
+        serviceType: serviceType,
         costPerformance: calculateCostPerformance(price, days, company.rating)
     };
 }
 
 // 主计算函数
 function calculateExpressOptions(formData) {
-    const { fromCountry, toCountry, weight, urgent } = formData;
+    const { fromCountry, toCountry, weight, urgent, parcelType, serviceType } = formData;
     const isIntl = isInternational(fromCountry, toCountry);
     
     const companies = isIntl ? INTERNATIONAL_EXPRESS : DOMESTIC_EXPRESS;
     
     // 计算所有选项
     const options = companies.map(company => 
-        calculateOption(company, weight, urgent)
+        calculateOption(company, weight, urgent, parcelType, serviceType)
     );
     
     // 按性价比排序

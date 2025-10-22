@@ -38,16 +38,87 @@ function setupEventListeners() {
     // 国家变化时更新城市
     fromCountry.addEventListener('change', function() {
         updateCitySelect('fromCity', this.value);
+        updateDynamicOptions(); // 更新寄件类型和服务类型
     });
     
     toCountry.addEventListener('change', function() {
         updateCitySelect('toCity', this.value);
+        updateDynamicOptions(); // 更新寄件类型和服务类型
     });
     
     // 表单提交
     form.addEventListener('submit', function(e) {
         e.preventDefault();
         handleFormSubmit();
+    });
+    
+    // 初始化动态选项
+    updateDynamicOptions();
+}
+
+// 更新动态选项（寄件类型和服务类型）
+function updateDynamicOptions() {
+    const fromCountry = document.getElementById('fromCountry').value;
+    const toCountry = document.getElementById('toCountry').value;
+    const isIntl = fromCountry !== toCountry;
+    
+    const companies = isIntl ? INTERNATIONAL_EXPRESS : DOMESTIC_EXPRESS;
+    
+    // 收集所有寄件类型
+    const allParcelTypes = new Map();
+    const allServiceTypes = new Map();
+    
+    companies.forEach(company => {
+        if (company.parcelTypes) {
+            company.parcelTypes.forEach(pt => {
+                if (!allParcelTypes.has(pt.id)) {
+                    allParcelTypes.set(pt.id, pt);
+                }
+            });
+        }
+        if (company.serviceTypes) {
+            company.serviceTypes.forEach(st => {
+                if (!allServiceTypes.has(st.id)) {
+                    allServiceTypes.set(st.id, st);
+                }
+            });
+        }
+    });
+    
+    // 更新寄件类型选项
+    updateParcelTypeSelect(allParcelTypes);
+    
+    // 更新服务类型选项
+    updateServiceTypeSelect(allServiceTypes);
+}
+
+// 更新寄件类型选择框
+function updateParcelTypeSelect(parcelTypes) {
+    const select = document.getElementById('parcelType');
+    if (!select) return;
+    
+    select.innerHTML = '<option value="">请选择寄件类型</option>';
+    
+    parcelTypes.forEach((type, id) => {
+        const option = document.createElement('option');
+        option.value = id;
+        option.textContent = `${type.name} - ${type.description}`;
+        select.appendChild(option);
+    });
+}
+
+// 更新服务类型选择框
+function updateServiceTypeSelect(serviceTypes) {
+    const select = document.getElementById('serviceType');
+    if (!select) return;
+    
+    select.innerHTML = '<option value="">请选择服务类型</option>';
+    
+    serviceTypes.forEach((type, id) => {
+        const option = document.createElement('option');
+        option.value = id;
+        option.textContent = `${type.name} - ${type.description}`;
+        select.appendChild(option);
     });
 }
 
@@ -59,7 +130,9 @@ function handleFormSubmit() {
         toCountry: document.getElementById('toCountry').value,
         toCity: document.getElementById('toCity').value,
         weight: parseFloat(document.getElementById('weight').value),
-        urgent: document.getElementById('urgent').checked
+        urgent: document.getElementById('urgent').checked,
+        parcelType: document.getElementById('parcelType')?.value || null,
+        serviceType: document.getElementById('serviceType')?.value || null
     };
     
     const results = calculateExpressOptions(formData);

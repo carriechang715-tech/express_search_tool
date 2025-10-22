@@ -176,11 +176,29 @@ function calculateCostPerformance(price, days, rating) {
 }
 
 // 计算单个快递选项
-function calculateOption(company, weight, urgent) {
+function calculateOption(company, weight, urgent, parcelType, serviceType) {
     let price = company.basePrice + (weight - 1) * company.pricePerKg;
     let days = company.baseDays;
     
-    if (urgent) {
+    // 应用寄件类型系数
+    if (parcelType && company.parcelTypes) {
+        const selectedParcelType = company.parcelTypes.find(pt => pt.id === parcelType);
+        if (selectedParcelType) {
+            price = price * selectedParcelType.priceMultiplier;
+        }
+    }
+    
+    // 应用服务类型系数
+    if (serviceType && company.serviceTypes) {
+        const selectedServiceType = company.serviceTypes.find(st => st.id === serviceType);
+        if (selectedServiceType) {
+            price = price * selectedServiceType.priceMultiplier;
+            days = days * selectedServiceType.daysMultiplier;
+        }
+    }
+    
+    // 兼容旧的urgent参数（如果没有选择serviceType）
+    if (urgent && !serviceType) {
         price = price * company.urgentMultiplier;
         days = company.urgentDays;
     }
@@ -201,17 +219,19 @@ function calculateOption(company, weight, urgent) {
         rating: company.rating,
         features: company.features,
         website: company.website,
+        parcelType: parcelType,
+        serviceType: serviceType,
         costPerformance: calculateCostPerformance(price, days, company.rating)
     };
 }
 
 // 主计算函数
 function calculateExpressOptions(params) {
-    const { fromCountry, toCountry, weight, urgent } = params;
+    const { fromCountry, toCountry, weight, urgent, parcelType, serviceType } = params;
     const isIntl = isInternational(fromCountry, toCountry);
     
     const companies = isIntl ? INTERNATIONAL_EXPRESS : DOMESTIC_EXPRESS;
-    const options = companies.map(company => calculateOption(company, weight, urgent));
+    const options = companies.map(company => calculateOption(company, weight, urgent, parcelType, serviceType));
     
     // 按性价比排序
     options.sort((a, b) => b.costPerformance - a.costPerformance);
@@ -246,7 +266,9 @@ module.exports = (req, res) => {
                 fromCountry: req.query.fromCountry || req.query.from || 'CN',
                 toCountry: req.query.toCountry || req.query.to || 'US',
                 weight: parseFloat(req.query.weight || 1),
-                urgent: req.query.urgent === 'true' || req.query.urgent === '1'
+                urgent: req.query.urgent === 'true' || req.query.urgent === '1',
+                parcelType: req.query.parcelType || null,
+                serviceType: req.query.serviceType || null
             };
         } else if (req.method === 'POST') {
             // POST 请求从 body 获取
@@ -254,7 +276,9 @@ module.exports = (req, res) => {
                 fromCountry: req.body.fromCountry || req.body.from || 'CN',
                 toCountry: req.body.toCountry || req.body.to || 'US',
                 weight: parseFloat(req.body.weight || 1),
-                urgent: req.body.urgent === true || req.body.urgent === 'true'
+                urgent: req.body.urgent === true || req.body.urgent === 'true',
+                parcelType: req.body.parcelType || null,
+                serviceType: req.body.serviceType || null
             };
         } else {
             res.status(405).json({
