@@ -14,7 +14,9 @@
 
 ## 🚀 在线访问
 
-访问地址：`https://你的用户名.github.io/express-tool/`
+- **网页版**：`https://carriechang715-tech.github.io/express_search_tool/`
+- **API 接口**：`https://carriechang715-tech.github.io/express_search_tool/api/calculate`
+- **API 测试**：`https://carriechang715-tech.github.io/express_search_tool/api-test.html`
 
 ## 💻 本地运行
 
@@ -102,11 +104,38 @@ git push -u origin main
 - 全球 CDN 加速
 - 完全免费
 
+## 📡 API 接口
+
+本工具提供 **HTTP API 接口**，支持其他应用调用！
+
+### 快速开始
+
+```bash
+# GET 请求
+curl "https://carriechang715-tech.github.io/express_search_tool/api/calculate?from=CN&to=US&weight=2.5"
+
+# POST 请求
+curl -X POST "https://carriechang715-tech.github.io/express_search_tool/api/calculate" \
+  -H "Content-Type: application/json" \
+  -d '{"fromCountry":"CN","toCountry":"US","weight":2.5}'
+```
+
+### 在线测试
+
+访问 API 测试页面：`https://carriechang715-tech.github.io/express_search_tool/api-test.html`
+
+### 完整文档
+
+查看完整 API 文档：[API.md](./API.md)
+
+---
+
 ## 📝 技术栈
 
 - 纯 HTML5
 - CSS3（渐变、动画、响应式设计）
 - 原生 JavaScript（ES6+）
+- Serverless Functions（API 接口）
 - 无任何第三方依赖
 
 ## 📄 许可证

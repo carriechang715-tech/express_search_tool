@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API 测试工具 - 快递评估 API</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Courier New', monospace;
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        h1 {
+            color: #4ec9b0;
+            margin-bottom: 10px;
+        }
+        .subtitle {
+            color: #808080;
+            margin-bottom: 30px;
+        }
+        .section {
+            background: #252526;
+            border: 1px solid #3c3c3c;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .section h2 {
+            color: #569cd6;
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            color: #9cdcfe;
+            margin-bottom: 5px;
+            font-size: 0.9rem;
+        }
+        input, select {
+            width: 100%;
+            padding: 10px;
+            background: #3c3c3c;
+            border: 1px solid #555;
+            border-radius: 4px;
+            color: #d4d4d4;
+            font-family: 'Courier New', monospace;
+        }
+        input:focus, select:focus {
+            outline: none;
+            border-color: #007acc;
+        }
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        button {
+            padding: 12px 24px;
+            background: #0e639c;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+            transition: background 0.3s;
+        }
+        button:hover {
+            background: #1177bb;
+        }
+        button.secondary {
+            background: #3c3c3c;
+        }
+        button.secondary:hover {
+            background: #505050;
+        }
+        .response {
+            background: #1e1e1e;
+            border: 1px solid #3c3c3c;
+            border-radius: 4px;
+            padding: 15px;
+            margin-top: 15px;
+            overflow-x: auto;
+        }
+        .response pre {
+            margin: 0;
+            color: #ce9178;
+            font-size: 0.9rem;
+            white-space: pre-wrap;
+        }
+        .status {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .status.success {
+            background: #14532d;
+            color: #86efac;
+        }
+        .status.error {
+            background: #7f1d1d;
+            color: #fca5a5;
+        }
+        .endpoint {
+            background: #2d2d30;
+            padding: 10px;
+            border-radius: 4px;
+            margin-bottom: 15px;
+            font-size: 0.9rem;
+        }
+        .endpoint code {
+            color: #ce9178;
+        }
+        .method {
+            display: inline-block;
+            padding: 3px 8px;
+            background: #0e639c;
+            color: white;
+            border-radius: 3px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔌 快递评估 API 测试工具</h1>
+        <p class="subtitle">实时测试 API 接口，查看请求和响应</p>
+
+        <!-- API 信息 -->
+        <div class="section">
+            <h2>📡 API 端点</h2>
+            <div class="endpoint">
+                <span class="method">GET</span>
+                <span class="method" style="background:#2d7a3e;">POST</span>
+                <code id="apiUrl">加载中...</code>
+            </div>
+        </div>
+
+        <!-- 请求表单 -->
+        <div class="section">
+            <h2>📝 请求参数</h2>
+            <div class="form-group">
+                <label>请求方法</label>
+                <select id="method">
+                    <option value="GET">GET</option>
+                    <option value="POST">POST</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>寄件国家 (fromCountry)</label>
+                <select id="fromCountry">
+                    <option value="CN">CN - 中国</option>
+                    <option value="US">US - 美国</option>
+                    <option value="UK">UK - 英国</option>
+                    <option value="JP">JP - 日本</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>收件国家 (toCountry)</label>
+                <select id="toCountry">
+                    <option value="CN">CN - 中国</option>
+                    <option value="US" selected>US - 美国</option>
+                    <option value="UK">UK - 英国</option>
+                    <option value="JP">JP - 日本</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>重量/kg (weight)</label>
+                <input type="number" id="weight" value="2.5" min="0.1" max="100" step="0.1">
+            </div>
+            <div class="form-group">
+                <label>是否加急 (urgent)</label>
+                <select id="urgent">
+                    <option value="false">false</option>
+                    <option value="true">true</option>
+                </select>
+            </div>
+            <div class="btn-group">
+                <button onclick="sendRequest()">🚀 发送请求</button>
+                <button class="secondary" onclick="clearResponse()">🗑️ 清空</button>
+            </div>
+        </div>
+
+        <!-- 响应结果 -->
+        <div class="section">
+            <h2>📤 响应结果</h2>
+            <div id="responseContainer" style="display: none;">
+                <div id="statusBadge"></div>
+                <div class="response">
+                    <pre id="responseBody">等待请求...</pre>
+                </div>
+            </div>
+            <div id="emptyState" style="color: #808080; text-align: center; padding: 40px;">
+                点击"发送请求"开始测试
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 获取当前域名
+        const apiUrl = window.location.origin + '/api/calculate';
+        document.getElementById('apiUrl').textContent = apiUrl;
+
+        async function sendRequest() {
+            const method = document.getElementById('method').value;
+            const fromCountry = document.getElementById('fromCountry').value;
+            const toCountry = document.getElementById('toCountry').value;
+            const weight = parseFloat(document.getElementById('weight').value);
+            const urgent = document.getElementById('urgent').value === 'true';
+
+            const responseContainer = document.getElementById('responseContainer');
+            const emptyState = document.getElementById('emptyState');
+            const statusBadge = document.getElementById('statusBadge');
+            const responseBody = document.getElementById('responseBody');
+
+            responseContainer.style.display = 'block';
+            emptyState.style.display = 'none';
+            responseBody.textContent = '请求中...';
+
+            try {
+                let response;
+                const startTime = Date.now();
+
+                if (method === 'GET') {
+                    const params = new URLSearchParams({
+                        from: fromCountry,
+                        to: toCountry,
+                        weight: weight,
+                        urgent: urgent
+                    });
+                    response = await fetch(`${apiUrl}?${params}`);
+                } else {
+                    response = await fetch(apiUrl, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            fromCountry,
+                            toCountry,
+                            weight,
+                            urgent
+                        })
+                    });
+                }
+
+                const endTime = Date.now();
+                const duration = endTime - startTime;
+                const data = await response.json();
+
+                // 显示状态
+                const isSuccess = response.ok;
+                statusBadge.className = `status ${isSuccess ? 'success' : 'error'}`;
+                statusBadge.textContent = `HTTP ${response.status} • ${duration}ms`;
+
+                // 显示响应
+                responseBody.textContent = JSON.stringify(data, null, 2);
+
+            } catch (error) {
+                statusBadge.className = 'status error';
+                statusBadge.textContent = 'ERROR';
+                responseBody.textContent = `请求失败: ${error.message}`;
+            }
+        }
+
+        function clearResponse() {
+            const responseContainer = document.getElementById('responseContainer');
+            const emptyState = document.getElementById('emptyState');
+            responseContainer.style.display = 'none';
+            emptyState.style.display = 'block';
+        }
+    </script>
+</body>
+</html>
