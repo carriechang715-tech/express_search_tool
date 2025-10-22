@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>v2.0 新功能演示 - 快递评估工具</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            line-height: 1.8;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        h1 {
+            color: #2d3748;
+            margin-bottom: 10px;
+            font-size: 2.5rem;
+            text-align: center;
+        }
+        .version-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-weight: bold;
+            margin-bottom: 30px;
+        }
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+        .feature-card {
+            background: #f7fafc;
+            border-radius: 16px;
+            padding: 30px;
+            border: 2px solid #e2e8f0;
+            transition: all 0.3s;
+        }
+        .feature-card:hover {
+            border-color: #667eea;
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.2);
+            transform: translateY(-5px);
+        }
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 15px;
+        }
+        .feature-title {
+            color: #2d3748;
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+        .feature-desc {
+            color: #4a5568;
+            margin-bottom: 20px;
+        }
+        .example-box {
+            background: #edf2f7;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+            font-size: 0.9rem;
+        }
+        .example-box strong {
+            color: #2d3748;
+            display: block;
+            margin-bottom: 8px;
+        }
+        .option-list {
+            list-style: none;
+            margin-top: 10px;
+        }
+        .option-list li {
+            padding: 8px 0;
+            padding-left: 25px;
+            position: relative;
+        }
+        .option-list li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #48bb78;
+            font-weight: bold;
+        }
+        .comparison {
+            background: white;
+            border: 2px solid #667eea;
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 40px;
+        }
+        .comparison h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+        }
+        .comparison-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 15px;
+        }
+        .old-version, .new-version {
+            padding: 15px;
+            border-radius: 8px;
+        }
+        .old-version {
+            background: #fed7d7;
+        }
+        .new-version {
+            background: #c6f6d5;
+        }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 40px 0;
+        }
+        .stat-card {
+            background: linear-gradient(135deg, #667eea15 0%, #764ba215 100%);
+            padding: 25px;
+            border-radius: 12px;
+            text-align: center;
+            border: 2px solid #667eea;
+        }
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #667eea;
+            display: block;
+        }
+        .stat-label {
+            color: #4a5568;
+            margin-top: 8px;
+            font-size: 0.95rem;
+        }
+        .btn {
+            display: inline-block;
+            padding: 15px 35px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 12px;
+            font-weight: bold;
+            margin: 20px 10px;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.5);
+        }
+        .center {
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="center">
+            <h1>🎉 快递评估工具 v2.0</h1>
+            <span class="version-badge">全新升级</span>
+            <p style="color: #718096; font-size: 1.1rem; margin-bottom: 20px;">
+                新增寄件类型和服务类型动态选项，让快递选择更精准！
+            </p>
+        </div>
+
+        <!-- 统计数据 -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <span class="stat-number">13</span>
+                <span class="stat-label">快递公司</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-number">90+</span>
+                <span class="stat-label">寄件类型选项</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-number">50+</span>
+                <span class="stat-label">服务类型选项</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-number">100%</span>
+                <span class="stat-label">向后兼容</span>
+            </div>
+        </div>
+
+        <!-- 核心功能 -->
+        <div class="feature-grid">
+            <!-- 功能1 -->
+            <div class="feature-card">
+                <div class="feature-icon">📦</div>
+                <div class="feature-title">寄件类型选择</div>
+                <div class="feature-desc">
+                    根据实际寄送内容选择类型，价格更精准
+                </div>
+                <div class="example-box">
+                    <strong>国际快递示例（DHL）：</strong>
+                    <ul class="option-list">
+                        <li>文件 - 便宜20%</li>
+                        <li>包裹 - 标准价格</li>
+                        <li>样品 - 优惠10%</li>
+                        <li>商品 - 加收10%</li>
+                    </ul>
+                </div>
+                <div class="example-box">
+                    <strong>国内快递示例（顺丰）：</strong>
+                    <ul class="option-list">
+                        <li>文件 - 便宜20%</li>
+                        <li>包裹 - 标准价格</li>
+                        <li>生鲜 - 加收30%</li>
+                        <li>冷运 - 加收50%</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- 功能2 -->
+            <div class="feature-card">
+                <div class="feature-icon">🚀</div>
+                <div class="feature-title">服务类型选择</div>
+                <div class="feature-desc">
+                    根据时效需求选择服务，平衡速度和价格
+                </div>
+                <div class="example-box">
+                    <strong>国际快递示例（FedEx）：</strong>
+                    <ul class="option-list">
+                        <li>优先型 - 1-3天，+60%价格</li>
+                        <li>经济型 - 4-7天，标准价格</li>
+                        <li>陆运 - 更慢，-40%价格</li>
+                    </ul>
+                </div>
+                <div class="example-box">
+                    <strong>国内快递示例（顺丰）：</strong>
+                    <ul class="option-list">
+                        <li>即日 - 当天达，+100%</li>
+                        <li>次晚 - 次日达，+30%</li>
+                        <li>标快 - 标准，正常价</li>
+                        <li>特惠 - 较慢，-30%</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- 功能3 -->
+            <div class="feature-card">
+                <div class="feature-icon">🎯</div>
+                <div class="feature-title">智能动态显示</div>
+                <div class="feature-desc">
+                    根据寄收件地自动显示相关选项
+                </div>
+                <div class="example-box">
+                    <strong>智能识别：</strong>
+                    <ul class="option-list">
+                        <li>国内到国内 → 显示国内快递服务</li>
+                        <li>国内到国外 → 显示国际快递服务</li>
+                        <li>不同公司 → 不同选项组合</li>
+                        <li>实时更新 → 无需刷新页面</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- 版本对比 -->
+        <div class="comparison">
+            <h2>📊 版本对比</h2>
+            <div class="comparison-row">
+                <div class="old-version">
+                    <h3 style="margin-bottom: 15px;">❌ v1.0 旧版本</h3>
+                    <ul class="option-list">
+                        <li>只能选择加急/普通</li>
+                        <li>所有包裹统一价格</li>
+                        <li>无法区分寄件类型</li>
+                        <li>服务类型单一</li>
+                    </ul>
+                </div>
+                <div class="new-version">
+                    <h3 style="margin-bottom: 15px;">✅ v2.0 新版本</h3>
+                    <ul class="option-list">
+                        <li>7-13种寄件类型</li>
+                        <li>3-4种服务类型</li>
+                        <li>价格更精准（差异20-50%）</li>
+                        <li>时效更灵活（0.5-2倍）</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- 使用场景 -->
+        <div style="margin-top: 40px;">
+            <h2 style="color: #2d3748; margin-bottom: 20px;">💡 典型使用场景</h2>
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">📄</div>
+                    <div class="feature-title">寄送合同文件到美国</div>
+                    <ul class="option-list">
+                        <li>寄件类型：文件</li>
+                        <li>服务类型：DHL Express</li>
+                        <li>预计费用：¥180</li>
+                        <li>预计时效：2-3天</li>
+                    </ul>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🎁</div>
+                    <div class="feature-title">寄送生日礼物到北京</div>
+                    <ul class="option-list">
+                        <li>寄件类型：包裹</li>
+                        <li>服务类型：顺丰次晚</li>
+                        <li>预计费用：¥23</li>
+                        <li>预计时效：次日达</li>
+                    </ul>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🥬</div>
+                    <div class="feature-title">寄送生鲜水果</div>
+                    <ul class="option-list">
+                        <li>寄件类型：生鲜</li>
+                        <li>服务类型：顺丰即日/冷运</li>
+                        <li>预计费用：¥45</li>
+                        <li>预计时效：当天达</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- CTA -->
+        <div class="center" style="margin-top: 50px; padding: 30px; background: #f7fafc; border-radius: 16px;">
+            <h2 style="color: #2d3748; margin-bottom: 15px;">🚀 立即体验新功能</h2>
+            <p style="color: #718096; margin-bottom: 25px; font-size: 1.1rem;">
+                更精准的价格计算，更灵活的服务选择，更好的用户体验！
+            </p>
+            <a href="http://localhost:8080" class="btn">💻 本地体验</a>
+            <a href="https://carriechang715-tech.github.io/express_search_tool/" class="btn" style="background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);">🌐 在线使用</a>
+        </div>
+
+        <!-- 技术说明 -->
+        <div style="margin-top: 40px; padding: 25px; background: #fff5f5; border: 2px solid #fc8181; border-radius: 12px;">
+            <h3 style="color: #c53030; margin-bottom: 15px;">🔧 技术亮点</h3>
+            <ul class="option-list">
+                <li><strong>动态表单</strong>：根据选择实时更新可用选项</li>
+                <li><strong>智能计算</strong>：多维度价格和时效计算</li>
+                <li><strong>API 支持</strong>：完整的 RESTful API</li>
+                <li><strong>向后兼容</strong>：新旧版本无缝切换</li>
+                <li><strong>数据真实</strong>：基于各快递公司官网</li>
+            </ul>
+        </div>
+
+        <!-- 更新日志 -->
+        <div style="margin-top: 30px; padding: 20px; background: #edf2f7; border-radius: 12px;">
+            <h3 style="color: #2d3748; margin-bottom: 15px;">📝 更新日志</h3>
+            <p style="color: #4a5568;"><strong>v2.0.0</strong> - 2025-10-21</p>
+            <ul class="option-list" style="margin-top: 10px;">
+                <li>新增 90+ 寄件类型选项</li>
+                <li>新增 50+ 服务类型选项</li>
+                <li>优化价格计算算法</li>
+                <li>优化时效评估逻辑</li>
+                <li>更新所有快递公司数据</li>
+                <li>完善 API 接口文档</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>
